@@ -1,9 +1,11 @@
-const raceListView = document.querySelector("#raceListView");
+import { showRaceDetails } from "./raceDetails.js";
+
+
 
 export async function loadRaces() {
   try {
 
-    const response = await fetch("../data/races.json");
+    const response = await fetch("./data/races.json");
 
     if (!response.ok) {
       throw new Error("Race data failed to load");
@@ -19,6 +21,7 @@ export async function loadRaces() {
 }
 
 function displayRaces(races) {
+    const raceListView = document.querySelector("#raceListView");
 
   raceListView.innerHTML = "";
 
@@ -34,7 +37,12 @@ function displayRaces(races) {
       <button data-id="${race.id}">View Details</button>
     `;
 
+    card.querySelector("button").addEventListener("click", () => {
+  showRaceDetails(race);
+});
+
     raceListView.appendChild(card);
 
   });
 }
+
