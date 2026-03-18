@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Mountain 50K",
+    "distance": 31,
+    "elevation": 5000,
+    "difficulty": "Hard",
+    "location": "Utah"
+  },
+  {
+    "id": 2,
+    "name": "Spartan Beast",
+    "distance": 13,
+    "elevation": 3000,
+    "difficulty": "Hard",
+    "location": "Snowbasin"
+  },
+  {
+    "id": 3,
+    "name": "Half Marathon",
+    "distance": 13.1,
+    "elevation": 800,
+    "difficulty": "Moderate",
+    "location": "Salt Lake"
+  }
+]
