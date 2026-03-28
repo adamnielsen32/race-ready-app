@@ -5,7 +5,7 @@
     "distance": 31,
     "elevation": 5000,
     "difficulty": "Hard",
-    "location": "Utah"
+    "city": "Park City"
   },
   {
     "id": 2,
@@ -13,7 +13,7 @@
     "distance": 13,
     "elevation": 3000,
     "difficulty": "Hard",
-    "location": "Snowbasin"
+    "city": "huntsville"
   },
   {
     "id": 3,
@@ -21,6 +21,6 @@
     "distance": 13.1,
     "elevation": 800,
     "difficulty": "Moderate",
-    "location": "Salt Lake"
+    "city": "Salt Lake City"
   }
 ]

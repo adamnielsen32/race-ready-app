@@ -1,16 +1,38 @@
 body {
-font-family: Arial, sans-serif;
-margin: 0;
-background: #f1f1f1;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background:
+    linear-gradient(rgba(10, 19, 32, 0.45), rgba(10, 19, 32, 0.45)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%2387b9d9'/%3E%3Cstop offset='100%25' stop-color='%23dbe9f4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='900' fill='url(%23sky)'/%3E%3Cpath d='M0 620 L180 470 L290 560 L430 360 L620 580 L790 310 L980 610 L1120 430 L1290 610 L1450 470 L1600 620 L1600 900 L0 900 Z' fill='%23485f4f'/%3E%3Cpath d='M0 700 L170 610 L320 690 L480 520 L700 720 L860 560 L1080 740 L1260 610 L1430 730 L1600 660 L1600 900 L0 900 Z' fill='%23384a3d'/%3E%3Cpath d='M1080 700 C1110 660 1150 650 1180 675 C1200 690 1220 725 1240 740 L1245 756 L1220 760 C1200 740 1185 720 1165 710 C1145 700 1125 710 1110 730 Z' fill='%23f4f7fb'/%3E%3Ccircle cx='1260' cy='170' r='54' fill='%23fff2b3'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
-background: #1B263B;
-color: white;
-padding: 1rem;
-display: flex;
-justify-content: space-between;
-align-items: center;
+  background: #1B263B;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+main {
+  flex: 1;
+}
+
+header a {
+  text-decoration: none;
+  color: white;
+}
+
+header a:hover {
+  color: #ddd;
 }
 
 nav button {
@@ -23,11 +45,13 @@ display: none;
 }
 
 .race-card {
-background: white;
-padding: 1rem;
-margin: 1rem;
-border-radius: 8px;
-box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  position: relative;
+  margin: 1rem;
+  width: min(320px, 100%);
+  height: 240px;
+  perspective: 1000px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 input {
@@ -45,4 +69,191 @@ button {
 #paceResult {
   margin-top: 10px;
   font-weight: bold;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error-message {
+  color: #d9534f;
+  text-align: center;
+  padding: 1rem;
+  font-weight: bold;
+}
+
+.no-races {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.retry-btn {
+  display: block;
+  margin: 1rem auto;
+  background: #1B263B;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.retry-btn:hover {
+  background: #2c3e50;
+}
+
+#fuelResult {
+  margin-top: 10px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+section {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+
+  .race-card {
+    margin: 0.5rem;
+  }
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  border-radius: 12px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+  text-align: left;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.card-front {
+  background: white;
+  color: #1B263B;
+  z-index: 2;
+  transform: rotateY(0deg);
+  opacity: 1;
+}
+
+.card-back {
+  background: #1B263B;
+  color: white;
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+  opacity: 0;
+}
+
+.race-card:hover .card-front {
+  transform: rotateY(180deg);
+  opacity: 0;
+}
+
+.race-card:hover .card-back {
+  transform: rotateY(0deg);
+  opacity: 1;
+}
+.card-face h3 {
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.card-face p {
+  margin: 0;
+}
+
+.flip-hint {
+  font-size: 0.9rem;
+  opacity: 0.75;
+  margin-top: auto;
+  align-self: center;
+}
+
+#raceListView {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: stretch;
+  padding: 2rem 1rem 3rem;
+  border-radius: 0 0 18px 18px;
+}
+
+#raceDetailsView {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+}
+
+#raceDetailsView h2,
+#raceDetailsView h3 {
+  margin-top: 0;
+}
+
+#raceDetailsView p {
+  line-height: 1.5;
+}
+
+.details-btn {
+  background: #1B263B;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+.card-back .details-btn {
+  background: white;
+  color: #1B263B;
+}
+
+.details-btn:hover {
+  background: #2c3e50;
+}
+
+.card-back .details-btn:hover {
+  background: #e9ecef;
+}
+
+footer {
+  background: #1B263B;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+footer p {
+  margin: 0;
 }

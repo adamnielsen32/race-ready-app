@@ -1,11 +1,14 @@
 import { loadRaces } from "./raceList.js";
 import { showRaceDetails } from "./raceDetails.js";
+import { initTrainingLog } from "./workouts.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-  loadRaces();
   setupNav();
+  initTrainingLog();
+  handleHashChange(); // Set initial view based on hash
+  loadRaces();
   loadSavedRace();
 }
 
@@ -23,7 +26,21 @@ export function showView(viewId) {
   views.forEach(view => view.classList.add("hidden"));
 
   document.getElementById(viewId).classList.remove("hidden");
+
+  // Update hash for back/forward navigation
+  const hashMap = { raceListView: "#races", raceDetailsView: "#details", trainingView: "#training" };
+  window.location.hash = hashMap[viewId] || "";
 }
+
+function handleHashChange() {
+  const hash = window.location.hash;
+  const viewMap = { "#races": "raceListView", "#details": "raceDetailsView", "#training": "trainingView" };
+  const viewId = viewMap[hash] || "raceListView";
+  showView(viewId);
+}
+
+// Listen for hash changes (back/forward buttons)
+window.addEventListener("hashchange", handleHashChange);
 
 function loadSavedRace() {
   const saved = localStorage.getItem("selectedRace");
