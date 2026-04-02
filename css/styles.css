@@ -137,6 +137,17 @@ section {
 
   .race-card {
     margin: 0.5rem;
+    cursor: pointer;
+  }
+
+  .race-card:hover .card-front {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+
+  .race-card:hover .card-back {
+    transform: rotateY(180deg);
+    opacity: 0;
   }
 }
 
@@ -183,6 +194,17 @@ section {
   transform: rotateY(0deg);
   opacity: 1;
 }
+
+.race-card.flipped .card-front {
+  transform: rotateY(180deg);
+  opacity: 0;
+}
+
+.race-card.flipped .card-back {
+  transform: rotateY(0deg);
+  opacity: 1;
+}
+
 .card-face h3 {
   margin: 0 0 0.5rem 0;
   line-height: 1.2;
@@ -199,7 +221,7 @@ section {
   align-self: center;
 }
 
-#raceListView {
+#raceListView:not(.hidden) {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -225,6 +247,67 @@ section {
 
 #raceDetailsView p {
   line-height: 1.5;
+}
+
+#trainingView {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(27, 38, 59, 0.85);
+  border-radius: 12px;
+  color: #f0f0f0;
+}
+
+#trainingView h2,
+#trainingView label {
+  color: #ffffff;
+}
+
+#trainingView input,
+#trainingView select {
+  background: #f0f0f0;
+  color: #1B263B;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#trainingView input::placeholder {
+  color: #666;
+}
+
+#workoutList {
+  color: #f0f0f0;
+  list-style: none;
+  padding: 0;
+}
+
+#workoutList li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border-left: 4px solid #77b7d9;
+  color: #f0f0f0;
+}
+
+#workoutList button {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: 12px;
+  cursor: pointer;
+}
+
+#workoutList button:hover {
+  background: #c9302c;
+}
+
+#totalMiles {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 .details-btn {

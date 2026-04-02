@@ -1,6 +1,7 @@
 import { loadRaces } from "./raceList.js";
 import { showRaceDetails } from "./raceDetails.js";
 import { initTrainingLog } from "./workouts.js";
+import { loadSelectedRace } from "./storage.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -43,10 +44,9 @@ function handleHashChange() {
 window.addEventListener("hashchange", handleHashChange);
 
 function loadSavedRace() {
-  const saved = localStorage.getItem("selectedRace");
+  const race = loadSelectedRace();
 
-  if (saved) {
-    const race = JSON.parse(saved);
+  if (race) {
     showRaceDetails(race);
   }
 }

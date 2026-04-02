@@ -1,5 +1,7 @@
 import { showView } from "./main.js";
 import { getWeather } from "../weather.js";
+import { saveSelectedRace, loadFuelPlan, saveFuelPlan, getFuelPlanKey } from "./storage.js";
+import { calculatePace, calculateFuel } from "./utils.js";
 
 const detailsView = document.querySelector("#raceDetailsView");
 
@@ -47,18 +49,49 @@ export function showRaceDetails(race) {
 
   showView("raceDetailsView");
 
-  loadFuelPlan(race);
+  displayFuelPlan(race);
 
-  localStorage.setItem("selectedRace", JSON.stringify(race));
+  saveSelectedRace(race);
 }
 
 function attachEvents(race) {
 
   document.querySelector("#calcPaceBtn")
-    .addEventListener("click", () => calculatePace(race));
+    .addEventListener("click", () => {
+      const hours = parseFloat(document.querySelector("#hours").value) || 0;
+      const minutes = parseFloat(document.querySelector("#minutes").value) || 0;
+      const paceResult = calculatePace(race, hours, minutes);
+      document.querySelector("#paceResult").textContent = paceResult;
+    });
 
   document.querySelector("#calcFuelBtn")
-    .addEventListener("click", () => calculateFuel(race));
+    .addEventListener("click", () => {
+      const weight = parseFloat(document.querySelector("#weight").value);
+      const duration = parseFloat(document.querySelector("#duration").value);
+      const resultDiv = document.querySelector("#fuelResult");
+
+      if (!weight || !duration) {
+        resultDiv.textContent = "Please enter valid inputs.";
+        return;
+      }
+
+      const fuelPlan = calculateFuel(duration);
+
+      resultDiv.innerHTML = `
+        <p><strong>Total Carbs:</strong> ${fuelPlan.totalCarbs}g</p>
+        <p><strong>Water Needed:</strong> ${fuelPlan.totalWater.toFixed(1)} L</p>
+        <p><strong>Sodium Needed:</strong> ${fuelPlan.totalSodium} mg</p>
+      `;
+
+      // Save to localStorage
+      const fullPlan = {
+        weight,
+        duration,
+        ...fuelPlan
+      };
+
+      saveFuelPlan(race, fullPlan);
+    });
 
   document.querySelector("#backBtn")
     .addEventListener("click", () => {
@@ -66,83 +99,16 @@ function attachEvents(race) {
     });
 }
 
-function calculatePace(race) {
-
-  const hours = parseFloat(document.querySelector("#hours").value) || 0;
-  const minutes = parseFloat(document.querySelector("#minutes").value) || 0;
-
-  const totalMinutes = (hours * 60) + minutes;
-
-  if (totalMinutes === 0) {
-    document.querySelector("#paceResult").textContent = "Enter a valid time.";
-    return;
-  }
-
-  const pace = totalMinutes / race.distance;
-
-  const paceMinutes = Math.floor(pace);
-  const paceSeconds = Math.round((pace - paceMinutes) * 60);
-
-  document.querySelector("#paceResult").textContent =
-    `You need to average ${paceMinutes}:${paceSeconds.toString().padStart(2, "0")} per mile`;
-}
-
-function getFuelPlanKey(race) {
-  return `fuelPlan-${race.id}`;
-}
-
-function calculateFuel(race) {
-
-  const weight = parseFloat(document.querySelector("#weight").value);
-  const duration = parseFloat(document.querySelector("#duration").value);
-
-  const resultDiv = document.querySelector("#fuelResult");
-
-  if (!weight || !duration) {
-    resultDiv.textContent = "Please enter valid inputs.";
-    return;
-  }
-
-  // 🔥 Core logic
-  const carbsPerHour = 60; // grams (standard endurance baseline)
-  const totalCarbs = carbsPerHour * duration;
-
-  const waterPerHour = 0.5; // liters/hour
-  const totalWater = waterPerHour * duration;
-
-  const sodiumPerHour = 500; // mg/hour
-  const totalSodium = sodiumPerHour * duration;
-
-  resultDiv.innerHTML = `
-    <p><strong>Total Carbs:</strong> ${totalCarbs}g</p>
-    <p><strong>Water Needed:</strong> ${totalWater.toFixed(1)} L</p>
-    <p><strong>Sodium Needed:</strong> ${totalSodium} mg</p>
-  `;
-
-  // Save to localStorage
-  const fuelPlan = {
-    weight,
-    duration,
-    totalCarbs,
-    totalWater,
-    totalSodium
-  };
-
-  localStorage.setItem(getFuelPlanKey(race), JSON.stringify(fuelPlan));
-}
-
-function loadFuelPlan(race) {
-  const saved = localStorage.getItem(getFuelPlanKey(race));
+function displayFuelPlan(race) {
+  const saved = loadFuelPlan(race);
 
   if (!saved) return;
 
-  const plan = JSON.parse(saved);
-
   document.querySelector("#fuelResult").innerHTML = `
     <p><strong>Saved Plan:</strong></p>
-    <p>Carbs: ${plan.totalCarbs}g</p>
-    <p>Water: ${plan.totalWater} L</p>
-    <p>Sodium: ${plan.totalSodium} mg</p>
+    <p>Carbs: ${saved.totalCarbs}g</p>
+    <p>Water: ${saved.totalWater} L</p>
+    <p>Sodium: ${saved.totalSodium} mg</p>
   `;
 }
 

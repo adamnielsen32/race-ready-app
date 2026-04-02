@@ -1,7 +1,9 @@
+import { saveWorkouts, loadWorkouts } from "./storage.js";
+
 let workouts = [];
 
 export function initTrainingLog() {
-  loadWorkouts();
+  workouts = loadWorkouts();
   renderWorkouts();
   setupForm();
 }
@@ -51,17 +53,8 @@ function renderWorkouts() {
     `Weekly Total: ${total} miles`;
 }
 
-function saveWorkouts() {
-  localStorage.setItem("workouts", JSON.stringify(workouts));
-}
-
-function loadWorkouts() {
-  const saved = localStorage.getItem("workouts");
-  if (saved) workouts = JSON.parse(saved);
-}
-
 function deleteWorkout(index) {
   workouts.splice(index, 1);
-  saveWorkouts();
+  saveWorkouts(workouts);
   renderWorkouts();
 }

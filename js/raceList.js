@@ -3,7 +3,6 @@ import { showRaceDetails } from "./raceDetails.js";
 export async function loadRaces() {
   const raceListView = document.querySelector("#raceListView");
   
-  // Show loading state
   raceListView.innerHTML = "<p class='loading'>Loading races...</p>";
   
   try {
@@ -15,7 +14,7 @@ export async function loadRaces() {
     
     const races = await response.json();
     
-    // Validate that races is an array
+    // Validate 
     if (!Array.isArray(races)) {
       throw new Error("Invalid data format: Expected an array of races.");
     }
@@ -60,6 +59,14 @@ function displayRaces(races) {
     
     card.querySelector(".details-btn").addEventListener("click", () => {
       showRaceDetails(race);
+    });
+    
+    // Add click handler for mobile card flipping
+    card.addEventListener("click", (e) => {
+      // Don't flip if clicking the details button
+      if (!e.target.closest(".details-btn")) {
+        card.classList.toggle("flipped");
+      }
     });
     
     raceListView.appendChild(card);
